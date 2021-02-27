@@ -31,7 +31,7 @@ const renderLabel = (cx, cy, startAngle, innerAngle, radius, weight) => {
   return <circle cx={x} cy={y} r={weightRadius} fill="#676a6d" />;
 };
 
-const colors = ["#e9ecef", "#bde0fe", "#AC3931", "yellow"];
+const colors = ["#e9ecef", "#bde0fe", "#E1CE7A", "yellow"];
 
 const Pie = ({ data, cx, cy, radius }) => {
   const [activePie, setActivePie] = useState(-1);
@@ -53,30 +53,30 @@ const Pie = ({ data, cx, cy, radius }) => {
     const _sections = [];
     const sizeInPercent = 100 / data.length;
 
-    let from =
+    let startAngle =
       sizeInPercent !== 100 ? 360 - percentToDegree(sizeInPercent) / 2 : 0;
 
     // Set start position for start drawing the pie sections
-    let [startX, startY] = polarToCartesian(cx, cy, radius, from, 0);
+    let [startX, startY] = polarToCartesian(cx, cy, radius, startAngle, 0);
 
     // Create sections
     for (let i = 0; i < data.length; i++) {
       const sizeInDeg = percentToDegree(sizeInPercent);
-      const [x, y] = polarToCartesian(cx, cy, radius, from, sizeInDeg);
+      const endAngle = startAngle + sizeInDeg;
+
+      // Coordinates where sections ends
+      const [x, y] = polarToCartesian(cx, cy, radius, startAngle, sizeInDeg);
 
       const path = `M${cx},${cy}  L${startX},${startY}  A${radius},${radius} 0 ${
         sizeInDeg < 180 ? 0 : 1
       },1 ${x},${y} z`;
-      const tmpNewEndAngle = from + sizeInDeg;
 
       _sections.push(
         <Sector
           cx={cx}
           cy={cy}
-          startAngle={from}
-          endAngle={
-            tmpNewEndAngle > 360 ? tmpNewEndAngle - 360 : tmpNewEndAngle
-          }
+          startAngle={startAngle}
+          endAngle={endAngle > 360 ? endAngle - 360 : endAngle}
           innerAngle={sizeInDeg}
           path={path}
           fill={i === activePie ? "#f6f7f8" : colors[i]}
@@ -90,8 +90,8 @@ const Pie = ({ data, cx, cy, radius }) => {
         />
       );
 
-      const tmpNewFrom = from + sizeInDeg;
-      from = tmpNewFrom > 360 ? tmpNewFrom - 360 : tmpNewFrom;
+      const newStartAngle = startAngle + sizeInDeg;
+      startAngle = newStartAngle > 360 ? newStartAngle - 360 : newStartAngle;
       startX = x;
       startY = y;
     }

@@ -1,9 +1,8 @@
 import "./App.css";
 
 import Pie from "./components/Pie";
-import ResponsiveContainer from "./components/ResponsiveContainer";
-
 import PieChart from "./components/PieChart";
+import ResponsiveContainer from "./components/ResponsiveContainer";
 
 const App = () => {
   return (
@@ -11,7 +10,7 @@ const App = () => {
       <ResponsiveContainer>
         <PieChart height={120} width={120}>
           <Pie
-            radius={50}
+            radius={55}
             data={[
               { name: "Java", weight: 3 },
               { name: "Git", weight: 2 },

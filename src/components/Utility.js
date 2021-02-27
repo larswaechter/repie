@@ -4,10 +4,10 @@ export const polarToCartesian = (
   centerX,
   centerY,
   radius,
-  from,
-  angleInDegrees
+  startAngle,
+  degrees
 ) => {
-  var angleInRadians = ((from + angleInDegrees - 90) * Math.PI) / 180.0;
+  var angleInRadians = ((startAngle + degrees - 90) * Math.PI) / 180.0;
   return [
     Math.floor(centerX + radius * Math.cos(angleInRadians)),
     Math.floor(centerY + radius * Math.sin(angleInRadians)),

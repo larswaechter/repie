@@ -17,21 +17,22 @@ const Sector = ({
   renderLabel,
 }) => {
   const { weight } = payload;
-  console.log(startAngle, endAngle);
   return (
     <Fragment>
-      <path
-        cx={cx}
-        cy={cy}
-        d={path}
-        fill={fill}
-        stroke={stroke}
-        data-idx={payload.position}
-        onMouseOver={(e) => onMouseOver(payload, e)}
-        onMouseLeave={(e) => onMouseLeave(payload, e)}
-        onClick={(e) => onClick(payload, e)}
-      />
-      {renderLabel(cx, cy, startAngle, innerAngle, radius, weight)}
+      <g className="pie-sector">
+        <path
+          cx={cx}
+          cy={cy}
+          d={path}
+          fill={fill}
+          stroke={stroke}
+          data-idx={payload.position}
+          onMouseOver={(e) => onMouseOver(payload, e)}
+          onMouseLeave={(e) => onMouseLeave(payload, e)}
+          onClick={(e) => onClick(payload, e)}
+        />
+        {renderLabel(cx, cy, startAngle, innerAngle, radius, weight)}
+      </g>
     </Fragment>
   );
 };
