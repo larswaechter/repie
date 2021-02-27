@@ -4,7 +4,7 @@ import Sector from "./Sector";
 import { polarToCartesian, percentToDegree } from "./Utility";
 
 const renderLabel = (cx, cy, startAngle, innerAngle, radius, weight) => {
-  // Center of angle
+  // Center section of angle
   const [x, y] = polarToCartesian(
     cx,
     cy,
@@ -51,25 +51,35 @@ const Pie = ({ data, cx, cy, radius }) => {
 
   const createSections = useCallback(() => {
     const _sections = [];
-    const sizeInPercent = 100 / data.length;
 
+    // Sizes for each section
+    const sectionSizePercent = 100 / data.length;
+    const sectionSizeDegree = percentToDegree(sectionSizePercent);
+
+    // set the start angle to center the first section on the top
     let startAngle =
-      sizeInPercent !== 100 ? 360 - percentToDegree(sizeInPercent) / 2 : 0;
+      sectionSizePercent !== 100 ? 360 - sectionSizeDegree / 2 : 0;
 
-    // Set start position for start drawing the pie sections
+    // set start position for start drawing the pie sections
     let [startX, startY] = polarToCartesian(cx, cy, radius, startAngle, 0);
 
-    // Create sections
+    // create sections
     for (let i = 0; i < data.length; i++) {
-      const sizeInDeg = percentToDegree(sizeInPercent);
-      const endAngle = startAngle + sizeInDeg;
+      const endAngle = startAngle + sectionSizeDegree;
 
-      // Coordinates where sections ends
-      const [x, y] = polarToCartesian(cx, cy, radius, startAngle, sizeInDeg);
+      // coordinates where sections ends
+      const [endX, endY] = polarToCartesian(
+        cx,
+        cy,
+        radius,
+        startAngle,
+        sectionSizeDegree
+      );
 
+      // content
       const path = `M${cx},${cy}  L${startX},${startY}  A${radius},${radius} 0 ${
-        sizeInDeg < 180 ? 0 : 1
-      },1 ${x},${y} z`;
+        sectionSizeDegree < 180 ? 0 : 1
+      },1 ${endX},${endY} z`;
 
       _sections.push(
         <Sector
@@ -77,7 +87,7 @@ const Pie = ({ data, cx, cy, radius }) => {
           cy={cy}
           startAngle={startAngle}
           endAngle={endAngle > 360 ? endAngle - 360 : endAngle}
-          innerAngle={sizeInDeg}
+          innerAngle={sectionSizeDegree}
           path={path}
           fill={i === activePie ? "#f6f7f8" : colors[i]}
           stroke="#f48668"
@@ -90,10 +100,11 @@ const Pie = ({ data, cx, cy, radius }) => {
         />
       );
 
-      const newStartAngle = startAngle + sizeInDeg;
+      // start drawing of next section where the current one has ended
+      const newStartAngle = startAngle + sectionSizeDegree;
       startAngle = newStartAngle > 360 ? newStartAngle - 360 : newStartAngle;
-      startX = x;
-      startY = y;
+      startX = endX;
+      startY = endY;
     }
     setSections(_sections);
   }, [data, activePie, onMouseOver, onMouseLeave, onClick, cx, cy, radius]);

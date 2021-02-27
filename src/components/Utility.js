@@ -7,6 +7,8 @@ export const polarToCartesian = (
   startAngle,
   degrees
 ) => {
+  // Degree to radians => 360° = 2 PI
+  // - 90°, since 0° is at 3 o'clock
   var angleInRadians = ((startAngle + degrees - 90) * Math.PI) / 180.0;
   return [
     Math.floor(centerX + radius * Math.cos(angleInRadians)),
