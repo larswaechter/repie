@@ -49,22 +49,24 @@ const Pie = ({ data, cx, cy, radius }) => {
     console.log(payload);
   }, []);
 
-  const createPies = useCallback(() => {
+  const createSections = useCallback(() => {
     const _sections = [];
     const sizeInPercent = 100 / data.length;
 
-    // does this really work???
     let from =
       sizeInPercent !== 100 ? 360 - percentToDegree(sizeInPercent) / 2 : 0;
 
     // Set start position for start drawing the pie sections
     let [startX, startY] = polarToCartesian(cx, cy, radius, from, 0);
 
+    // Create sections
     for (let i = 0; i < data.length; i++) {
       const sizeInDeg = percentToDegree(sizeInPercent);
       const [x, y] = polarToCartesian(cx, cy, radius, from, sizeInDeg);
 
-      const path = `M${cx},${cy}  L${startX},${startY}  A${cx},${cy} 0 0,1 ${x},${y} z`;
+      const path = `M${cx},${cy}  L${startX},${startY}  A${radius},${radius} 0 ${
+        sizeInDeg < 180 ? 0 : 1
+      },1 ${x},${y} z`;
       const tmpNewEndAngle = from + sizeInDeg;
 
       _sections.push(
@@ -97,8 +99,8 @@ const Pie = ({ data, cx, cy, radius }) => {
   }, [data, activePie, onMouseOver, onMouseLeave, onClick, cx, cy, radius]);
 
   useEffect(() => {
-    createPies();
-  }, [data, createPies]);
+    createSections();
+  }, [data, createSections]);
 
   return <Fragment>{sections.map((pie) => pie)}</Fragment>;
 };

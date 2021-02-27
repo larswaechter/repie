@@ -4,6 +4,7 @@ const Sector = ({
   cx,
   cy,
   startAngle,
+  endAngle,
   innerAngle,
   path,
   fill,
@@ -16,6 +17,7 @@ const Sector = ({
   renderLabel,
 }) => {
   const { weight } = payload;
+  console.log(startAngle, endAngle);
   return (
     <Fragment>
       <path
@@ -24,7 +26,7 @@ const Sector = ({
         d={path}
         fill={fill}
         stroke={stroke}
-        data-ixd={payload.position}
+        data-idx={payload.position}
         onMouseOver={(e) => onMouseOver(payload, e)}
         onMouseLeave={(e) => onMouseLeave(payload, e)}
         onClick={(e) => onClick(payload, e)}

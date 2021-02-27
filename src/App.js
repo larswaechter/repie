@@ -10,7 +10,14 @@ const App = () => {
     <div className="App" style={{ padding: 30 }}>
       <ResponsiveContainer>
         <PieChart height={120} width={120}>
-          <Pie radius={60} data={[{ name: "Java", weight: 3 }]} />
+          <Pie
+            radius={50}
+            data={[
+              { name: "Java", weight: 3 },
+              { name: "Git", weight: 2 },
+              { name: "SQL", weight: 1 },
+            ]}
+          />
         </PieChart>
       </ResponsiveContainer>
     </div>
