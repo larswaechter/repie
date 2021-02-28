@@ -1,5 +1,3 @@
-import "./App.css";
-
 import Pie from "./components/Pie";
 import PieChart from "./components/PieChart";
 import ResponsiveContainer from "./components/ResponsiveContainer";

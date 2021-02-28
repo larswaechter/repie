@@ -1,6 +1,7 @@
 import { cloneElement } from "react";
 
-const Surface = ({ height, width, children }) => {
+const PieChart = ({ height, width, children, margin }) => {
+  const { top, right, bottom, left } = margin;
   return (
     <svg
       cx="50%"
@@ -9,10 +10,20 @@ const Surface = ({ height, width, children }) => {
       height={height}
       viewBox={`0 0 ${width} ${height}`}
       className="pie-chart"
+      style={{
+        marginTop: top,
+        marginRight: right,
+        marginBottom: bottom,
+        marginLeft: left,
+      }}
     >
       {cloneElement(children, { cx: width / 2, cy: height / 2 })}
     </svg>
   );
 };
 
-export default Surface;
+PieChart.defaultProps = {
+  margin: { top: 0, right: 0, bottom: 0, left: 0 },
+};
+
+export default PieChart;
