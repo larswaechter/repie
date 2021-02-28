@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect, useCallback } from "react";
 
 import Sector from "./Sector";
-import { polarToCartesian, percentToDegree } from "./Utility";
+import { polarToCartesian, percentToDegree } from "../Utility/Utility";
 
 const renderLabel = (cx, cy, startAngle, innerAngle, radius, weight) => {
   // Center section of angle
@@ -33,21 +33,24 @@ const renderLabel = (cx, cy, startAngle, innerAngle, radius, weight) => {
 
 const colors = ["#e9ecef", "#bde0fe", "#E1CE7A", "yellow"];
 
-const Pie = ({ data, cx, cy, radius }) => {
-  const [activePie, setActivePie] = useState(-1);
+const Pie = ({
+  data,
+  cx,
+  cy,
+  radius,
+  activeIndex,
+  onClick,
+  onContextMenu,
+  onMouseOver,
+  onMouseLeave,
+}) => {
   const [sections, setSections] = useState([]);
 
-  const onMouseOver = useCallback((payload, e) => {
-    setActivePie(payload.position);
-  }, []);
-
-  const onMouseLeave = useCallback((payload) => {
-    setActivePie(-1);
-  }, []);
-
-  const onClick = useCallback((payload) => {
+  /*
+  const onClick = useCallback((payload, e) => {
     console.log(payload);
   }, []);
+  */
 
   const createSections = useCallback(() => {
     const _sections = [];
@@ -89,13 +92,14 @@ const Pie = ({ data, cx, cy, radius }) => {
           endAngle={endAngle > 360 ? endAngle - 360 : endAngle}
           innerAngle={sectionSizeDegree}
           path={path}
-          fill={i === activePie ? "#f6f7f8" : colors[i]}
+          fill={i === activeIndex ? "#f6f7f8" : colors[i]}
           stroke="#f48668"
           radius={radius}
           payload={{ ...data[i], position: i }}
+          onClick={onClick}
+          onContextMenu={onContextMenu}
           onMouseOver={onMouseOver}
           onMouseLeave={onMouseLeave}
-          onClick={onClick}
           renderLabel={renderLabel}
         />
       );
@@ -107,7 +111,17 @@ const Pie = ({ data, cx, cy, radius }) => {
       startY = endY;
     }
     setSections(_sections);
-  }, [data, activePie, onMouseOver, onMouseLeave, onClick, cx, cy, radius]);
+  }, [
+    data,
+    activeIndex,
+    onClick,
+    onContextMenu,
+    onMouseOver,
+    onMouseLeave,
+    cx,
+    cy,
+    radius,
+  ]);
 
   useEffect(() => {
     createSections();

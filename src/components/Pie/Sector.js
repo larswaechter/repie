@@ -9,9 +9,10 @@ const Sector = ({
   stroke,
   radius,
   payload,
+  onClick,
+  onContextMenu,
   onMouseOver,
   onMouseLeave,
-  onClick,
   renderLabel,
 }) => {
   const { position, weight } = payload;
@@ -27,6 +28,7 @@ const Sector = ({
         onMouseOver={(e) => onMouseOver(payload, e)}
         onMouseLeave={(e) => onMouseLeave(payload, e)}
         onClick={(e) => onClick(payload, e)}
+        onContextMenu={(e) => onContextMenu(payload, e)}
       />
       {renderLabel(cx, cy, startAngle, innerAngle, radius, weight)}
     </g>
