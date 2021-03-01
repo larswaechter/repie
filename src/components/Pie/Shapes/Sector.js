@@ -1,8 +1,9 @@
-const Sector = ({
+const PieShapesSector = ({
   cx,
   cy,
   startAngle,
   endAngle,
+  midAngle,
   innerAngle,
   path,
   fill,
@@ -15,9 +16,9 @@ const Sector = ({
   onMouseLeave,
   renderLabel,
 }) => {
-  const { position, weight } = payload;
+  const { position } = payload;
   return (
-    <g className="pie-sector">
+    <g className="pie-shapes-sector">
       <path
         cx={cx}
         cy={cy}
@@ -30,9 +31,16 @@ const Sector = ({
         onClick={(e) => onClick(payload, e)}
         onContextMenu={(e) => onContextMenu(payload, e)}
       />
-      {renderLabel(cx, cy, startAngle, innerAngle, radius, weight)}
+      {renderLabel(
+        { cx, cy, startAngle, innerAngle, midAngle, radius },
+        payload
+      )}
     </g>
   );
 };
 
-export default Sector;
+PieShapesSector.defaultProps = {
+  renderLabel: () => null,
+};
+
+export default PieShapesSector;

@@ -15,3 +15,5 @@ export const polarToCartesian = (
     Math.floor(centerY + radius * Math.sin(angleInRadians)),
   ];
 };
+
+export const trimAngle = (angle) => (angle > 360 ? angle - 360 : angle);

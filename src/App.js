@@ -1,9 +1,18 @@
 import { useState } from "react";
 
-import Pie from "./components/Pie/";
+import Pie from "./components/Pie/Pie";
 import PieDropdown from "./components/Pie/Dropdown/";
 import PieChart from "./components/Pie/PieChart";
 import ResponsiveContainer from "./components/Pie/ResponsiveContainer";
+import PieShapesWeight from "./components/Pie/Shapes/Weight";
+import { polarToCartesian } from "./components/Utility/Utility";
+
+const renderLabel = ({ cx, cy, radius, midAngle }, payload) => {
+  const { weight } = payload;
+  const [x, y] = polarToCartesian(cx, cy, 0.5 * radius, midAngle, 0);
+
+  return <PieShapesWeight cx={x} cy={y} weight={weight} />;
+};
 
 const App = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -13,12 +22,15 @@ const App = () => {
     left: 0,
   });
 
-  const handleDropdownClick = () => {
+  const handleDropdownClick = (action) => {
+    console.log(action);
     setActiveIndex(-1);
     setShowDropdown(false);
   };
 
-  const handlePieClick = (payload, e) => {};
+  const handlePieClick = (payload, e) => {
+    console.log("click!");
+  };
 
   const handlePieContextMenu = (payload, e) => {
     e.preventDefault();
@@ -49,6 +61,7 @@ const App = () => {
           <Pie
             radius={55}
             activeIndex={activeIndex}
+            renderLabel={renderLabel}
             onClick={handlePieClick}
             onContextMenu={handlePieContextMenu}
             onMouseOver={handlePieMouseOver}

@@ -1,35 +1,12 @@
 import { Fragment, useState, useEffect, useCallback } from "react";
 
-import Sector from "./Sector";
-import { polarToCartesian, percentToDegree } from "../Utility/Utility";
+import {
+  polarToCartesian,
+  percentToDegree,
+  trimAngle,
+} from "../Utility/Utility";
 
-const renderLabel = (cx, cy, startAngle, innerAngle, radius, weight) => {
-  // Center section of angle
-  const [x, y] = polarToCartesian(
-    cx,
-    cy,
-    0.5 * radius,
-    startAngle,
-    innerAngle / 2
-  );
-
-  let weightRadius;
-  switch (weight) {
-    case 1:
-      weightRadius = 6;
-      break;
-    case 2:
-      weightRadius = 4;
-      break;
-    case 3:
-      weightRadius = 2;
-      break;
-    default:
-      weightRadius = 0;
-  }
-
-  return <circle cx={x} cy={y} r={weightRadius} fill="#676a6d" />;
-};
+import PieShapesSector from "./Shapes/Sector";
 
 const colors = ["#e9ecef", "#bde0fe", "#E1CE7A", "yellow"];
 
@@ -39,18 +16,13 @@ const Pie = ({
   cy,
   radius,
   activeIndex,
+  renderLabel,
   onClick,
   onContextMenu,
   onMouseOver,
   onMouseLeave,
 }) => {
   const [sections, setSections] = useState([]);
-
-  /*
-  const onClick = useCallback((payload, e) => {
-    console.log(payload);
-  }, []);
-  */
 
   const createSections = useCallback(() => {
     const _sections = [];
@@ -68,7 +40,7 @@ const Pie = ({
 
     // create sections
     for (let i = 0; i < data.length; i++) {
-      const endAngle = startAngle + sectionSizeDegree;
+      const endAngle = trimAngle(startAngle + sectionSizeDegree);
 
       // coordinates where sections ends
       const [endX, endY] = polarToCartesian(
@@ -85,12 +57,13 @@ const Pie = ({
       },1 ${endX},${endY} z`;
 
       _sections.push(
-        <Sector
+        <PieShapesSector
           cx={cx}
           cy={cy}
           startAngle={startAngle}
-          endAngle={endAngle > 360 ? endAngle - 360 : endAngle}
+          endAngle={endAngle}
           innerAngle={sectionSizeDegree}
+          midAngle={trimAngle(startAngle + sectionSizeDegree / 2)}
           path={path}
           fill={i === activeIndex ? "#f6f7f8" : colors[i]}
           stroke="#f48668"
@@ -105,8 +78,7 @@ const Pie = ({
       );
 
       // start drawing of next section where the current one has ended
-      const newStartAngle = startAngle + sectionSizeDegree;
-      startAngle = newStartAngle > 360 ? newStartAngle - 360 : newStartAngle;
+      startAngle = endAngle;
       startX = endX;
       startY = endY;
     }
@@ -114,6 +86,7 @@ const Pie = ({
   }, [
     data,
     activeIndex,
+    renderLabel,
     onClick,
     onContextMenu,
     onMouseOver,
